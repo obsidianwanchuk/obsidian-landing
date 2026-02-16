@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBSIDIAN — The Privacy-First AI + Bitcoin Layer 1</title>
+    <meta name="description" content="Where AI agents meet Bitcoin security with zero-knowledge privacy. The next evolution of blockchain.">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1a1a2e;
+            --text: #e4e4ef;
+            --text-dim: #6b6b8d;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --btc: #f7931a;
+            --ai: #00d2ff;
+            --privacy: #a855f7;
+            --green: #10b981;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(108, 92, 231, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108, 92, 231, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+        
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        .glow-orb.purple { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -200px; }
+        .glow-orb.blue { width: 500px; height: 500px; background: var(--ai); bottom: -200px; left: -200px; animation-delay: -5s; }
+        .glow-orb.orange { width: 400px; height: 400px; background: var(--btc); top: 50%; left: 50%; animation-delay: -10s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.8);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            background: linear-gradient(135deg, var(--accent), var(--ai));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        
+        .btn {
+            padding: 0.7rem 1.8rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white;
+            border: none;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px var(--accent-glow); }
+        
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover { border-color: var(--accent); background: rgba(108, 92, 231, 0.1); }
+        
+        /* Hero */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: rgba(18, 18, 26, 0.8);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .hero-badge .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        h1 .gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--ai) 50%, var(--btc) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shimmer 5s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        .hero-sub {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        
+        /* Stats bar */
+        .stats-bar {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: rgba(18, 18, 26, 0.5);
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+        }
+        
+        .stat { text-align: center; }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-value.purple { color: var(--accent); }
+        .stat-value.blue { color: var(--ai); }
+        .stat-value.orange { color: var(--btc); }
+        .stat-label { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.3rem; letter-spacing: 0.1em; }
+        
+        /* Pillars */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-sub {
+            text-align: center;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            font-size: 1.1rem;
+        }
+        
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pillar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .pillar:hover { border-color: var(--accent); transform: translateY(-4px); }
+        .pillar:hover::before { opacity: 1; }
+        
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .pillar h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pillar p {
+            color: var(--text-dim);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        
+        .pillar.ai { border-top: 2px solid var(--ai); }
+        .pillar.btc { border-top: 2px solid var(--btc); }
+        .pillar.privacy { border-top: 2px solid var(--privacy); }
+        
+        /* Tech section */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tech-item {
+            padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .tech-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: rgba(108, 92, 231, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .tech-item .label {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .tech-item .desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        
+        /* Code block */
+        .code-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+        
+        .code-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .code-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dot.red { background: #ff5f57; }
+        .code-dot.yellow { background: #febc2e; }
+        .code-dot.green { background: #28c840; }
+        
+        .code-line { color: var(--text-dim); line-height: 1.8; }
+        .code-line .keyword { color: var(--accent); }
+        .code-line .string { color: var(--green); }
+        .code-line .comment { color: #4a4a6a; }
+        
+        /* CTA */
+        .cta {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 8rem 2rem;
+        }
+        
+        .cta h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .cta-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        
+        footer a { color: var(--accent); text-decoration: none; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .stats-bar { gap: 2rem; }
+            .stat-value { font-size: 1.8rem; }
+            .pillars { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="glow-orb purple"></div>
+    <div class="glow-orb blue"></div>
+    <div class="glow-orb orange"></div>
+    
+    <nav>
+        <div class="logo">◆ OBSIDIAN</div>
+        <div class="nav-links">
+            <a href="#pillars">Technology</a>
+            <a href="#tech">Architecture</a>
+            <a href="#build">Build</a>
+            <a href="https://github.com" class="btn btn-ghost">GitHub</a>
+            <a href="#" class="btn btn-primary">Read Docs</a>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            TESTNET LIVE — JOIN THE REVOLUTION
+        </div>
+        
+        <h1>
+            The <span class="gradient">Invisible</span><br>
+            Supercomputer
+        </h1>
+        
+        <p class="hero-sub">
+            AI agents. Bitcoin security. Zero-knowledge privacy.<br>
+            The first Layer 1 where everything is private by default.
+        </p>
+        
+        <div class="hero-buttons">
+            <a href="#" class="btn btn-primary">Start Building →</a>
+            <a href="#" class="btn btn-ghost">Read Whitepaper</a>
+        </div>
+    </section>
+    
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-value purple">&lt;1s</div>
+            <div class="stat-label">FINALITY</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value blue">100K+</div>
+            <div class="stat-label">TPS</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value orange">₿</div>
+            <div class="stat-label">BTC SECURED</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" style="color: var(--privacy);">ZK</div>
+            <div class="stat-label">PRIVATE BY DEFAULT</div>
+        </div>
+    </div>
+    
+    <section class="section" id="pillars">
+        <h2 class="section-title">Three Pillars. One Chain.</h2>
+        <p class="section-sub">Obsidian captures every major narrative in crypto — AI, Bitcoin, and Privacy — in a single, unstoppable Layer 1.</p>
+        
+        <div class="pillars">
+            <div class="pillar ai">
+                <div class="pillar-icon">🤖</div>
+                <h3>AI-Native Runtime</h3>
+                <p>Deploy autonomous AI agents that live on-chain. Verifiable inference with zero-knowledge proofs ensures every AI output is trustworthy. No hallucinations. No manipulation. Pure compute.</p>
+            </div>
+            
+            <div class="pillar btc">
+                <div class="pillar-icon">₿</div>
+                <h3>Bitcoin Anchored</h3>
+                <p>Every block is anchored to Bitcoin for unmatched security. Trustless BTC bridge lets you use real Bitcoin in smart contracts. The security of Bitcoin. The programmability of Ethereum.</p>
+            </div>
+            
+            <div class="pillar privacy">
+                <div class="pillar-icon">🔒</div>
+                <h3>Zero-Knowledge Everything</h3>
+                <p>All transactions private by default. Encrypted state, anonymous identity, and selective disclosure for compliance. Your data, your rules. Nobody sees what you don't want them to.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section" id="tech">
+        <h2 class="section-title">Built Different</h2>
+        <p class="section-sub">A ground-up architecture designed for the convergence of AI, Bitcoin, and privacy.</p>
+        
+        <div class="tech-grid">
+            <div class="tech-item">
+                <div class="icon">⚡</div>
+                <div>
+                    <div class="label">zkVM Execution</div>
+                    <div class="desc">Custom zero-knowledge virtual machine</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🔗</div>
+                <div>
+                    <div class="label">BTC Finality</div>
+                    <div class="desc">Bitcoin-anchored consensus</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🧠</div>
+                <div>
+                    <div class="label">On-Chain AI</div>
+                    <div class="desc">WASM-based model inference</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🛡️</div>
+                <div>
+                    <div class="label">Private State</div>
+                    <div class="desc">Encrypted by default</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🔑</div>
+                <div>
+                    <div class="label">Anonymous ID</div>
+                    <div class="desc">ZK identity system</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🌐</div>
+                <div>
+                    <div class="label">Agent Protocol</div>
+                    <div class="desc">AI-to-AI communication</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">📜</div>
+                <div>
+                    <div class="label">Solidity Compatible</div>
+                    <div class="desc">Deploy existing contracts</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <div class="icon">🦀</div>
+                <div>
+                    <div class="label">Rust Core</div>
+                    <div class="desc">Memory-safe & blazing fast</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="code-section" id="build">
+            <div class="code-header">
+                <div class="code-dot red"></div>
+                <div class="code-dot yellow"></div>
+                <div class="code-dot green"></div>
+            </div>
+            <div class="code-line"><span class="comment">// Deploy a private AI agent on Obsidian</span></div>
+            <div class="code-line"><span class="keyword">use</span> obsidian::{Agent, ZkProof, BtcAnchor};</div>
+            <div class="code-line"></div>
+            <div class="code-line"><span class="keyword">fn</span> main() {</div>
+            <div class="code-line">&nbsp;&nbsp;<span class="keyword">let</span> agent = Agent::new(<span class="string">"my-private-agent"</span>)</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;.with_model(<span class="string">"llama-70b"</span>)</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;.with_privacy(ZkProof::default())</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;.anchor_to(BtcAnchor::latest());</div>
+            <div class="code-line"></div>
+            <div class="code-line">&nbsp;&nbsp;agent.deploy().<span class="keyword">await</span>;</div>
+            <div class="code-line">&nbsp;&nbsp;<span class="comment">// Your agent is now live, private, and Bitcoin-secured</span></div>
+            <div class="code-line">}</div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <h2>Join the <span class="gradient">Invisible</span> Revolution</h2>
+        <p>Open source. Anonymous team. Community-driven.<br>Built by cypherpunks, for everyone.</p>
+        
+        <div class="cta-links">
+            <a href="#" class="btn btn-primary">Launch Testnet →</a>
+            <a href="#" class="btn btn-ghost">Discord</a>
+            <a href="#" class="btn btn-ghost">Twitter</a>
+            <a href="#" class="btn btn-ghost">GitHub</a>
+        </div>
+    </section>
+    
+    <footer>
+        <p>OBSIDIAN is open source software. No company. No team. Just code.</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="#">GitHub</a> · <a href="#">Docs</a> · <a href="#">Whitepaper</a> · <a href="#">Discord</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.75rem;">
+            "Privacy is not about having something to hide. Privacy is about having something to protect."
+        </p>
+    </footer>
+</body>
+</html>
